@@ -20,8 +20,16 @@ def convert(data):
     else:
         return data
 
+
 FIREBASE_URL = 'https://engauge.firebaseio.com/'
 firebase = firebase.FirebaseApplication(FIREBASE_URL, None)
+
+def get_group_names():
+	groupNames = []
+	groupResults = convert(firebase.get('/groups', None))
+	for key, value in groupResults.items():
+		groupNames.append(value.get('name'))
+	return groupNames
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -48,6 +56,7 @@ def login():
 	result = convert(firebase.get('/users', None))
 	usernames = []
 	passwords = []
+	groupNames = get_group_names()
 	for key, value in result.items():
 		usernames.append(value.get('username'))
 		passwords.append(value.get('password'))
@@ -60,14 +69,26 @@ def login():
 		else:
 			session['logged_in'] = True
 			return redirect(url_for('show_entries'))
-	return render_template('index.html', error=error)
+	return render_template('index.html', error=error, groups=groupNames)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def show_entries():
+	groupNames = get_group_names()
 	if not session.get('logged_in'):
 		flash("You're not logged in.")
 		return redirect(url_for('login'))
-	return render_template('dashboard.html')
+	return render_template('index.html', groups=groupNames)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+	if request.method == 'POST':
+			givenUsername = request.form['email']
+			givenPassword = request.form['password']
+			addUserURL = 'https://engauge.firebaseio.com/users/'
+			userFirebase = firebase.FirebaseApplication(addUserURL, None)
+			userFirebase.push({'username': givenUsername, 'password': givenPassword})
+			redirect(url_for('login'))
+	return render_template('signup.html')
 
 @app.route('/logout')
 def logout():
