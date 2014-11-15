@@ -1,12 +1,24 @@
-console.log("hi");
+var firebaseDataRef = new Firebase('https://engauge.firebaseio.com/');
 
-var firebaseDataRef = new Firebase('https://jqo8s40aj38.firebaseio-demo.com/');
+firebaseDataRef.onAuth(function(authData){
+	if (authData) {
+		console.log("User ID: " + authData.uid + ", Provider: " + authData.provider);
+	} else {
+		console.log("Logged out");
+	}
+});
 
-$('#messageInput').keypress(function (e) {
-        if (e.keyCode == 13) {
-          var name = $('#nameInput').val();
-          var text = $('#messageInput').val();
-          firebaseDataRef.set('User ' + name + ' says ' + text);
-          $('#messageInput').val('');
-        }
-      });
+
+var usernameText = $('#txtEmail').val();
+var passwordText = $('#txtPass').val();
+
+$('#loginPressed').keypress(function (e) {
+	if (e.keyCode == 13) {
+		firebaseDataRef.authWithPassword({
+			email : usernameText,
+			password: passwordText
+		}, function(err, authData) {
+			console.log("Fail");
+		});
+	}
+});

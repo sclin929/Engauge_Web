@@ -1,11 +1,30 @@
 <html>
     <head>
+    	<title>Engauge</title>
         <script src='https://cdn.firebase.com/js/client/1.1.1/firebase.js'></script>
         <script src='jquery-1.11.1.min.js'></script>
         <script src='firebase.js'></script>
+        <link rel="stylesheet" type="text/css" href="index.css">
     </head>
     <body>
-        <input type='text' id='nameInput' placeholder='Name'>
-        <input type='text' id='messageInput' placeholder='Message'>
+    	<div class='title'>Engauge</div>
+    	<div id="container" class="container">
+		<!-- LOGIN -->
+    		<form>
+         		<div>Login</div>
+
+         		<div>
+	         		<label>Email address</label>
+	         		<input type="email" id="txtEmail" placeholder="Enter email" name="email" />
+         		 </div>
+
+         		 <div>
+	         		 <label>Password</label>
+	         		 <input type="password" id="txtPass" placeholder="Password" name="password" />
+				</div>
+        	
+        		<button type="submit" class="btn btn-default btn-block">Login</button>
+        	</form>
+    	</div>
     </body>
 </html>
